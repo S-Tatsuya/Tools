@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: debug
+  namespace: default
+  labels:
+    env: study
+spec:
+  containers:
+    - name: debug
+      image: centos:7
