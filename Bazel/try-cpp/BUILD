@@ -1,7 +1,10 @@
 cc_binary (
     name = "main",
     srcs = ["main.cpp"],
-    deps = [":output"]
+    deps = [
+        ":output",
+        "//current_time:current_time",
+    ]
 )
 
 cc_library(
