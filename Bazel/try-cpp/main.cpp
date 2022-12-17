@@ -1,7 +1,8 @@
-# include <iostream>
+#include <iostream>
+#include "output.h"
 
 int main(void)
 {
-    std::cout << "Hello world." << std::endl;
+    output("Hello world.");
     return 0;
 }
