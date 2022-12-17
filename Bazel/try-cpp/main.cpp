@@ -1,6 +1,6 @@
 #include <iostream>
 #include "output.h"
-#include "current_time/current_time.h"
+#include "lib/current_time.h"
 
 int main(void)
 {
