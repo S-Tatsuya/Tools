@@ -282,3 +282,39 @@ Login Succeeded
 
 ## 教材
 - [AWSコンテナサービス入門-AWSの基本からECS・Copilot・CI/CD・App Runnerまで](https://www.udemy.com/course/aws-container/learn/lecture/35553834?start=0#overview)
+
+## GitHub Actions Runnerとして使用
+
+``` bash
+# Authentication
+
+
+√ Connected to GitHub
+
+# Runner Registration
+
+Enter the name of the runner group to add this runner to: [press Enter for Default] 
+
+# GitHubで表示される名前になる
+Enter the name of runner: [press Enter for ip-10-0-12-150] 
+
+# Labelの追加後からでも編集は出来る
+This runner will have the following labels: 'self-hosted', 'Linux', 'X64' 
+Enter any additional labels (ex. label-1,label-2): [press Enter to skip] aws-runner  
+
+√ Runner successfully added
+√ Runner connection is good
+
+# Runner settings
+
+Enter name of work folder: [press Enter for _work] 
+
+√ Settings Saved.
+
+ubuntu@ip-10-0-12-150:~/actions-runner$ ./run.sh
+
+√ Connected to GitHub
+
+Current runner version: '2.303.0'
+2023-03-26 07:26:26Z: Listening for Jobs
+```
