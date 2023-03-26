@@ -22,8 +22,6 @@
 コンテナはサーバーの中で動く。  
 サーバレスでの構築もできる。
 
-![代替テキスト](./doc/参照画像1.png "まとめ")
-
 #### 典型的なWebアプリケーションの構成例
 - 講座の最終目標:EC on Fargateを複数とRDSを使う(Auto Scaling)
 ``` plantuml
@@ -169,7 +167,6 @@ package "VPC" {
     - 左のメニューから `サブネットグループ-> DBサブネットグループ を作成` を選択してサブネットグループを作成する
         - サブネットは各AZのプライベートサブネットを選択する。
     - 左のメニューから`データベース -> データベースの作成` を選択してデータベースを作成する。
-
 - インスタンスとストレージは異なる料金が取られて
     - RDSを停止してもストレージの料金はかかる
         - ストレージに保存している内容はそのまま
@@ -209,9 +206,79 @@ Availability Zoneはリージョンの中で電力やネットワークが独立
     - `ECS -> リポジトリ -> リポジトリの作成` でDocker ImageをPushした
     - `リポジトリを選択 -> プッシュコマンドの表示` の指示に従ってDocker ImageをPushした
 3. AWSのサーバ( `ES2` )でイメージをダウンロードしてコンテナを起動する
+    - EC2からECRにアクセスする設定(イメージのダウンロード) 
+        - EC2を作成する。
+        - EC2にアクセスする。
+        - docker loginをしてECSにアクセスする権限を取得する
+            - IAM Roleを作成する
+    - ブラウザからEC2にアクセスする設定(ファイアウォール)の設定
+        - EC2のパブリックIPアドレスにアクセスするとエラーになる
+        - EC2のセキュリティのインバウンドルールを編集する
+            - HTTPへのアクセスを許可する
+    - EC2からRDSにアクセスする設定(データベースとの情報のやり取り)
+        - Host URIを指定する
+            - RDSのエンドポイントの内容を指定する
+            - RDSのセキュリティのインバウンドルールを編集する
+    ``` plantuml
+    @startuml
+    package VPC {
+        EC2 -> RDS
+        note on link
+        RDSのセキュリティルール設定
+        end note
+    }
+    EC2 <-- User
+    note on link
+    EC2のセキュリティルール設定
+    end note
+    ECR <-- EC2
+    note on link
+    ECRのセキュリテイルール設定
+    end note
+    @enduml
+    ```
 
 ### AWS Cloud9とは
 AWSが提供しているWebブラウザ上でコード実装できるサービス
+
+### EC2とは
+Amazon Machine Imageをもとにしたインスタンス
+サーバの役割を担う
+
+### AWS IAMとは
+Identity and Access Management サービス。  
+誰にどのリソースへのどのアクションを許可するかを管理するサービス。  
+主に以下の4つの機能を使う
+- IAM Policy: どのリソースへのどのアクションを許可するかの管理。JSON形式で設定する
+- IAM User: AWSのユーザ。IAM Policyを設定する箱。誰に該当する。ユーザに対して設定する
+    - アクセスキー、シークレットアクセス機を払い出すことで外部からアクセスすることが出来る
+- IAM Role: AWSのリソース間のどのリソースへのどのアクションを許可するかに使う。EC2インスタンスなどAWSのリソースに設定する。
+
+#### エラーの内容
+``` bash
+# awscliをインストールしていないとエラーになる
+
+# awscliをインストール後
+ubuntu@ip-10-0-2-81:~$ aws --version
+aws-cli/1.22.34 Python/3.10.6 Linux/5.15.0-1028-aws botocore/1.23.34
+ubuntu@ip-10-0-2-81:~$ aws ecr get-login-password --region ap-northeast-1 | docker login --username AWS --password-stdin 076288582636.dkr.ecr.ap-northeast-1.amazonaws.com
+
+# IAM Roleの設定前はアクセスの権限がないので失敗する
+Unable to locate credentials. You can configure credentials by running "aws configure".
+Error: Cannot perform an interactive login from a non TTY device
+
+# dockerコマンドの前にsudoをつけていないため
+ubuntu@ip-10-0-2-81:~$ aws ecr get-login-password --region ap-northeast-1 | docker login --username AWS --password-stdin 076288582636.dkr.ecr.ap-northeast-1.amazonaws.com
+permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Post "http://%2Fvar%2Frun%2Fdocker.sock/v1.24/auth": dial unix /var/run/docker.sock: connect: permission denied
+
+# 成功
+ubuntu@ip-10-0-2-81:~$ aws ecr get-login-password --region ap-northeast-1 | sudo docker login --username AWS --password-stdin 076288582636.dkr.ecr.ap-northeast-1.amazonaws.com
+WARNING! Your password will be stored unencrypted in /root/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+```
 
 ## 教材
 - [AWSコンテナサービス入門-AWSの基本からECS・Copilot・CI/CD・App Runnerまで](https://www.udemy.com/course/aws-container/learn/lecture/35553834?start=0#overview)
