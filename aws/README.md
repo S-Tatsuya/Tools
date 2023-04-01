@@ -280,6 +280,46 @@ https://docs.docker.com/engine/reference/commandline/login/#credentials-store
 Login Succeeded
 ```
 
+## ECS on Fargate
+複数のサーバーでコンテナを使うことで `スケール` がしやすく、`冗長性` が高くなる。  
+ただし、複数のコンテナの連携やオートスケールを手動で実行する必要があり、運用コストが高くなってしまう。  
+上記課題を解決をするためには `コンテナオーケストレーション` というツールを使う必要がある。
+```
+これが ECS on Fargate !!(サーバーの管理が不要になる。ECS on EC2だとサーバーの管理が必要)
+(Kubernetesも同じ、AWSのEKSはKubernetesを使うサービスである)
+```
+
+- 用語の整理
+    - `サーバー` に複数の `コンテナ` を起動することが出来る
+    - 複数の `サーバー` の塊が `クラスタ`
+    - `コンテナオーケストレーション` で `クラスタ` に対して `コンテナ` を自動で `デプロイ` してくれる
+
+### 基本概念
+- クラスタ：複数のコンピュータの集まり(サーバー、サービスの塊、入れ物)
+- タスク：タスク≒コンテナ。
+- タスク定義：CPUやメモリのサイズ。コンテナのポートや環境変数などの設定。  
+タスクを起動するのに使う
+- サービス：起動するタスクの数、ロードバランサーの設定、デプロ時の設定などがある  
+サービスはサーバーレスでのサーバーの代わり？
+
+``` plantuml
+@startuml
+package クラスタ {
+    package サービス {
+        class タスクA {
+        }
+        class タスクB {
+        }
+    }
+}
+
+タスク定義 -> タスクA
+タスク定義 -> タスクB
+@enduml
+```
+
+
+
 ## 教材
 - [AWSコンテナサービス入門-AWSの基本からECS・Copilot・CI/CD・App Runnerまで](https://www.udemy.com/course/aws-container/learn/lecture/35553834?start=0#overview)
 
