@@ -1,29 +1,36 @@
 # AWSの使い方を学ぶ
 
 ## AWSについて
+
 以下のような様々なサービスを提供している
+
 - `IaaS`(Infrastructure as a Service)  
 - `PaaS`(Platform as a Service)
 - `FaaS`(Function as a Service)
 
 ### AWSの操作方法
+
 - マネジメントコンソール
 - AWS CLI
 - ツール
 - SDK
 
 ### AWSでアプリケーションの実行環境
+
 #### 概要
+
 - 実行環境の例
-    - サーバ:EC2
-    - コンテナ:ECS
-    - Lambda
+  - サーバ:EC2
+  - コンテナ:ECS
+  - Lambda
 
 コンテナはサーバーの中で動く。  
 サーバレスでの構築もできる。
 
 #### 典型的なWebアプリケーションの構成例
-- 講座の最終目標:EC on Fargateを複数とRDSを使う(Auto Scaling)
+
+- 講座の最終目標:EC on Fargate を複数とRDSを使う(Auto Scaling)
+
 ``` plantuml
 @startuml
 package "VPC" {
@@ -35,9 +42,11 @@ package "VPC" {
     ECSonFargate_A <-> RDS
     ECSonFargate_B <-> RDS
 }
+@enduml
 ```
 
 - 参考:★EC2を複数とRDSを使う(Auto Scaling)★
+
 ``` plantuml
 @startuml
 package "VPC" {
@@ -49,10 +58,13 @@ package "VPC" {
     EC2_A <-> RDS
     EC2_B <-> RDS
 }
+@enduml
 ```
 
 ##### その他の構成
+
 - 前提:Webアプリケーションの構成
+
 ``` plantuml
 @startuml
 class Webアプリケーション
@@ -63,6 +75,7 @@ Webアプリケーション <- データベース
 ```
 
 - AWS:EC2一つの場合
+
 ``` plantuml
 @startuml
 package "VPC" {
@@ -79,6 +92,7 @@ endnote
 ```
 
 - AWS:EC2とRDSを使う
+
 ``` plantuml
 @startuml
 package "VPC" {
@@ -95,6 +109,7 @@ endnote
 ```
 
 - AWS:EC2を複数とRDSを使う
+
 ``` plantuml
 @startuml
 package "VPC" {
@@ -102,9 +117,11 @@ package "VPC" {
     EC2_B <-> RDS
     EC2_A -[hidden]- EC2_B
 }
+@enduml
 ```
 
 - ★AWS:EC2を複数とRDSを使う(Auto Scaling)★
+
 ``` plantuml
 @startuml
 package "VPC" {
@@ -121,9 +138,11 @@ note top of ELB
 Auto Scalingを補助して、
 適切なスケールを行ってくれるサービス
 endnote
+@enduml
 ```
 
 - ★AWS:EC2を複数とRDSを使う(Auto Scaling)★
+
 ``` plantuml
 @startuml
 package "VPC" {
@@ -135,19 +154,24 @@ package "VPC" {
     ECSonFargate_A <-> RDS
     ECSonFargate_B <-> RDS
 }
+@enduml
 ```
 
 ### AWSの料金体系
+
 - [料金説明](https://aws.amazon.com/jp/pricing/?aws-products-pricing.sort-by=item.additionalFields.productNameLowercase&aws-products-pricing.sort-order=asc&awsf.Free%20Tier%20Type=*all&awsf.tech-category=*all)
 - [無料枠](https://aws.amazon.com/jp/free/?all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc&awsf.Free%20Tier%20Types=*all&awsf.Free%20Tier%20Categories=*all)
 
 ## クラウドの定義
+
 ### 定義
+
 クラウドコンピューティングは、共用の構成可能なコンピューティングリソース（ネットワーク、サー
 バー、ストレージ、アプリケーション、サービス）の集積に、どこからでも、簡便に、必要に応じて、ネ
 ットワーク経由でアクセスすることを可能とするモデルであり、最小限の利用手続きまたはサービス
 プロバイダとのやりとりで速やかに割当てられ提供されるものである。このクラウドモデルは 5 つの
 基本的な特徴と 3 つのサービスモデル、および 4 つの実装モデルによって構成される。
+
 - オンデマンド・セルフサービス
 - 幅広いネットワークアクセス
 - リソースの共用
@@ -155,48 +179,55 @@ package "VPC" {
 - サービスが計測可能であること
 
 ### 参考資料
+
 - [NISTの定義](https://www.ipa.go.jp/files/000025366.pdf)
 
 ## 1. VPCの作成
+
 ### 手順
+
 - VPCの作成
-    - `お使いのVPC -> VPCを作成 -> 以下の設定でVPCを作成` をクリック
-        - VPCで料金はかからない
+  - `お使いのVPC -> VPCを作成 -> 以下の設定でVPCを作成` をクリック
+    - VPCで料金はかからない
 - RDSの作成
-    - RDSのページに行く
-    - 左のメニューから `サブネットグループ-> DBサブネットグループ を作成` を選択してサブネットグループを作成する
-        - サブネットは各AZのプライベートサブネットを選択する。
-    - 左のメニューから`データベース -> データベースの作成` を選択してデータベースを作成する。
+  - RDSのページに行く
+  - 左のメニューから `サブネットグループ-> DBサブネットグループ を作成` を選択してサブネットグループを作成する
+    - サブネットは各AZのプライベートサブネットを選択する。
+  - 左のメニューから`データベース -> データベースの作成` を選択してデータベースを作成する。
 - インスタンスとストレージは異なる料金が取られて
-    - RDSを停止してもストレージの料金はかかる
-        - ストレージに保存している内容はそのまま
-    - RDSは停止してもインスタンスを7日後に自動で再起動する
-        - 長期間使わないRDSのインスタンスは削除してしまっても良い
+  - RDSを停止してもストレージの料金はかかる
+    - ストレージに保存している内容はそのまま
+  - RDSは停止してもインスタンスを7日後に自動で再起動する
+    - 長期間使わないRDSのインスタンスは削除してしまっても良い
 
 ### VPCとは
-`Virtural Private Cloud`のことAWS内の仮想ネットワーク環境
 
+`Virtual Private Cloud`のことAWS内の仮想ネットワーク環境
 
 ### VPCの仕組み
+
 - リージョンとは
 AWSのデータセンターがある地域を「リージョン」と呼ぶ  
 - アベイラビリティゾーンとは
 Availability Zoneはリージョンの中で電力やネットワークが独立している単位
 
 - VPCはリージョン内に構築できる
-    - アベイラビリティゾーンをまたがって構築できる。
-        - 停電やネットワーク障害に強い環境にするため複数のAZにまたがるシステムが良い
+  - アベイラビリティゾーンをまたがって構築できる。
+    - 停電やネットワーク障害に強い環境にするため複数のAZにまたがるシステムが良い
 - サブネットとはVPCを構成する単位
-    - Public Subnet: インターネットから直接接続する必要がある部分
-    - Private Subnet: インターネットから直接接続させたくない部分
+  - Public Subnet: インターネットから直接接続する必要がある部分
+  - Private Subnet: インターネットから直接接続させたくない部分
 - サブネットは `AZ` の単位で作成する必要がある。
-    - AZ同士が通信するため？
+  - AZ同士が通信するため？
 
 ### RDS
+
 `Relational Database Service` のこと
 
 ## 2. コンテナの作成
-### 手順
+
+### コンテナの作成手順
+
 1. イメージをAWS Cloud9環境で作成する
     - `Cloud9 -> Create Environment` で環境を構築する
     - サーバのインスタンスが必要になる
@@ -206,7 +237,7 @@ Availability Zoneはリージョンの中で電力やネットワークが独立
     - `ECS -> リポジトリ -> リポジトリの作成` でDocker ImageをPushした
     - `リポジトリを選択 -> プッシュコマンドの表示` の指示に従ってDocker ImageをPushした
 3. AWSのサーバ( `ES2` )でイメージをダウンロードしてコンテナを起動する
-    - EC2からECRにアクセスする設定(イメージのダウンロード) 
+    - EC2からECRにアクセスする設定(イメージのダウンロード)
         - EC2を作成する。
         - EC2にアクセスする。
         - docker loginをしてECSにアクセスする権限を取得する
@@ -219,6 +250,7 @@ Availability Zoneはリージョンの中で電力やネットワークが独立
         - Host URIを指定する
             - RDSのエンドポイントの内容を指定する
             - RDSのセキュリティのインバウンドルールを編集する
+
     ``` plantuml
     @startuml
     package VPC {
@@ -239,22 +271,27 @@ Availability Zoneはリージョンの中で電力やネットワークが独立
     ```
 
 ### AWS Cloud9とは
+
 AWSが提供しているWebブラウザ上でコード実装できるサービス
 
 ### EC2とは
+
 Amazon Machine Imageをもとにしたインスタンス
 サーバの役割を担う
 
 ### AWS IAMとは
+
 Identity and Access Management サービス。  
 誰にどのリソースへのどのアクションを許可するかを管理するサービス。  
 主に以下の4つの機能を使う
+
 - IAM Policy: どのリソースへのどのアクションを許可するかの管理。JSON形式で設定する
 - IAM User: AWSのユーザ。IAM Policyを設定する箱。誰に該当する。ユーザに対して設定する
-    - アクセスキー、シークレットアクセス機を払い出すことで外部からアクセスすることが出来る
+  - アクセスキー、シークレットアクセス機を払い出すことで外部からアクセスすることが出来る
 - IAM Role: AWSのリソース間のどのリソースへのどのアクションを許可するかに使う。EC2インスタンスなどAWSのリソースに設定する。
 
 #### エラーの内容
+
 ``` bash
 # awscliをインストールしていないとエラーになる
 
@@ -281,20 +318,20 @@ Login Succeeded
 ```
 
 ## ECS on Fargate
+
 複数のサーバーでコンテナを使うことで `スケール` がしやすく、`冗長性` が高くなる。  
 ただし、複数のコンテナの連携やオートスケールを手動で実行する必要があり、運用コストが高くなってしまう。  
 上記課題を解決をするためには `コンテナオーケストレーション` というツールを使う必要がある。
-```
 これが ECS on Fargate !!(サーバーの管理が不要になる。ECS on EC2だとサーバーの管理が必要)
 (Kubernetesも同じ、AWSのEKSはKubernetesを使うサービスである)
-```
 
 - 用語の整理
-    - `サーバー` に複数の `コンテナ` を起動することが出来る
-    - 複数の `サーバー` の塊が `クラスタ`
-    - `コンテナオーケストレーション` で `クラスタ` に対して `コンテナ` を自動で `デプロイ` してくれる
+  - `サーバー` に複数の `コンテナ` を起動することが出来る
+  - 複数の `サーバー` の塊が `クラスタ`
+  - `コンテナオーケストレーション` で `クラスタ` に対して `コンテナ` を自動で `デプロイ` してくれる
 
 ### 基本概念
+
 - クラスタ：複数のコンピュータの集まり(サーバー、サービスの塊、入れ物)
 - タスク：タスク≒コンテナ。
 - タスク定義：CPUやメモリのサイズ。コンテナのポートや環境変数などの設定。  
@@ -318,9 +355,8 @@ package クラスタ {
 @enduml
 ```
 
-
-
 ## 教材
+
 - [AWSコンテナサービス入門-AWSの基本からECS・Copilot・CI/CD・App Runnerまで](https://www.udemy.com/course/aws-container/learn/lecture/35553834?start=0#overview)
 
 ## GitHub Actions Runnerとして使用
