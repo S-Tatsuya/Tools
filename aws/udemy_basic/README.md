@@ -365,3 +365,22 @@ Route 53についてはDomainの取得ができなかったので未対応
     - EC2にアクセスすることはできなかった。。。
         - HTTPプロトコルではアクセスできた
         - HTTPSプロトコルではできなかった
+
+## セッション6
+
+- MVCアーキテクチャ
+    - Model: メインのアプリケーション処理
+    - View: 画面表示に関する処理
+    - Controller: ユーザーからの入力を受け付けてModel、Viewを制御する。
+
+### ハンズオン
+
+1. Cloud9の作成
+2. Hello Worldの作成
+3. GitHub Accountの登録(すでに持っているアカウントを使う)
+4. アクセストークンの発行
+    - udemy-it-basic
+    - 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
+5. Hello WorldをPush
+6. Hello WorldをPull
+7. Rubyを書いてみる
