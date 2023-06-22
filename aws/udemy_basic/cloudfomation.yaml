@@ -1,0 +1,8 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Create EC2 Instance
+Resources:
+  MyEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-0b51fe1c0254d8fc9
+      InstanceType: t2.micro
