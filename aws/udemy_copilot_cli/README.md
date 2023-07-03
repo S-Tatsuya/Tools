@@ -83,12 +83,15 @@ test_cluster o--> myservice
 
 - `copilot app init` : Applicationの初期化
 - `copilot app show` : Applicationの情報を表示する
+- `copilot app delete` : Applicationの削除
 - `copilot env init` : Environmentの初期化
 - `copilot env show` : Environmentの情報を表示する
 - `copilot env deploy` : Environmentに対応するクラスタなどの作成
+- `copilot env delete` : Environmentの削除
 - `copilot svc init` : Serviceの初期化
 - `copilot svc show` : Serviceの情報を表示する
 - `copilot svc deploy` : Serviceのデプロイ
+- `copilot svc delete` : Serviceの削除
 - 実際の操作
 
     1. `copilot app init`
